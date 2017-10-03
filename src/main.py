@@ -105,10 +105,15 @@ def learn_embeddings(walks):
 
 	#print feature
 	sorted_array = sorted(feature.iteritems(),key = lambda x: x[0],reverse = False)
+	keys = [k for k,_ in sorted_array]
+
 	sorted_array = [v for _,v in sorted_array]
 	sorted_array = np.array(sorted_array)
 
 	print("dimensions: %d" % len(sorted_array[0]))
+
+	print sorted_array
+	print keys 
 	
 	with open("".join((args.output,".pkl")),"wb") as o:
 		pickle.dump(sorted_array,o)
