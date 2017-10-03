@@ -86,8 +86,32 @@ def learn_embeddings(walks):
 	walks = [map(str, walk) for walk in walks]
 	model = Word2Vec(walks, size=args.dimensions, window=args.window_size, min_count=0, 
 		workers=args.workers, iter=args.iter)
-	model.save_word2vec_format(args.output)
+	model.wv.save_word2vec_format(args.output)
 	
+	# write to pickle
+	print("writing to pkl...")
+	feature = {}
+	with open(args.output,"r") as f:
+		f.readline()
+		for l in f:
+			k = l.split()[0]
+			v = l.split()[1:]
+			v = map(lambda x:float(x),v)
+			feature[int(k)] = v
+	try:	
+		import cPickle as pickle
+	except Exception as e:
+		import pickle
+
+	#print feature
+	sorted_array = sorted(feature.iteritems(),key = lambda x: x[0],reverse = False)
+	sorted_array = [v for _,v in sorted_array]
+	sorted_array = np.array(sorted_array)
+
+	print("dimensions: %d" % len(sorted_array[0]))
+	
+	with open("".join((args.output,".pkl")),"wb") as o:
+		pickle.dump(sorted_array,o)
 	return
 
 def main(args):
